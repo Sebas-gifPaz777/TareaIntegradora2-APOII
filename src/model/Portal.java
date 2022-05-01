@@ -1,5 +1,6 @@
 package model;
 
+
 public class Portal extends Square {
 	
 	private Portal next2;
