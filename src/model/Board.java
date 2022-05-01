@@ -21,7 +21,7 @@ public class Board {
 		//Se crea el tablero con los numeros de cada casilla
 		first=new Square(1);
 		last=first;
-		first.setBack(last);
+		first.setPrev(last);
 		last.setNext(first);
 		int count=1;
 		int numTable=2;
@@ -85,7 +85,7 @@ public class Board {
 			for(int j=0;j<c;j++) {
 				
 				if(temp.getRick() && temp.getMorty()) {
-					System.out.print("["+temp.getRick()+temp.getMorty()"] ");
+					System.out.print("["+temp.getRick()+temp.getMorty() + "] ");
 				}
 				else if(temp.getRick()) {
 					System.out.print("["+temp.getRick()+"] ");

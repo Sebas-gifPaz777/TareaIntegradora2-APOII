@@ -28,7 +28,7 @@ public class Square {
 		this.id = id;
 	}
 
-	public boolean isMorty() {
+	public boolean getMorty() {
 		return morty;
 	}
 
@@ -36,7 +36,7 @@ public class Square {
 		this.morty = morty;
 	}
 
-	public boolean isRick() {
+	public boolean getRick() {
 		return rick;
 	}
 
@@ -44,7 +44,7 @@ public class Square {
 		this.rick = rick;
 	}
 
-	public boolean isSeed() {
+	public boolean getSeed() {
 		return seed;
 	}
 
