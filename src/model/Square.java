@@ -14,7 +14,7 @@ public class Square {
 		this.id = id;
 		morty = false;
 		rick = false;
-		seed = false;
+		seed = false; 
 	}
 	
 	
