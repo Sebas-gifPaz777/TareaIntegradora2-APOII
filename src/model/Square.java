@@ -2,6 +2,7 @@ package model;
 
 public class Square {
 	
+	private char idPortal='Z';
 	private int id;
 	private boolean morty;
 	private boolean rick;
@@ -9,6 +10,7 @@ public class Square {
 	
 	private Square prev;
 	private Square next;
+	private Square next2;
 	
 	public Square(int id) {
 		this.id = id;
@@ -16,9 +18,6 @@ public class Square {
 		rick = false;
 		seed = false; 
 	}
-	
-	
-	
 
 	public int getId() {
 		return id;
@@ -67,9 +66,20 @@ public class Square {
 	public void setNext(Square next) {
 		this.next = next;
 	}
-
-
-
+	public Square getNext2() {
+		return next2;
+	}
 	
+	public void setNext2(Square next2) {
+		this.next2 = next2;
+	}
+
+	public char getIdPortal() {
+		return idPortal;
+	}
+	
+	public void setIdPortal(char newIdP) {
+		idPortal=newIdP;
+	}
 
 }
