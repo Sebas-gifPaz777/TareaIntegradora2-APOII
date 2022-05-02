@@ -9,20 +9,20 @@ public class Board {
 	private int seeds=0;
 	private int rickSeeds=0;
 	private int mortySeeds=0;
-	private int rickPosition=0;
-	private int mortyPosition=0;
 	private LocalTime rickTime;
 	private LocalTime mortyTime;
 	private String rickName;
 	private String mortyName;
 	private int columns;
 	private int rows;
-	private Square tempRick;
-	private Square tempMorty;
 	
-	public Board(int c, int l, int s, int p) {
+	public Board(int c, int l, int s, int p, String r, String m) {
 		columns=c;
 		rows=l;
+		seeds=s;
+		rickName=r;
+		mortyName=m;
+		
 		//Se crea el tablero con los numeros de cada casilla
 		first=new Square(1);
 		last=first;
@@ -31,18 +31,20 @@ public class Board {
 		int count=1;
 		int numTable=2;
 		
-		while(count<((c*l))) {
+		while(count<(c*l)) {
 			last.setNext(new Square(numTable));
+			last.getNext().setPrev(last);
 			last=last.getNext();
 			last.setNext(first);
+			first.setPrev(last);
 			numTable++;
 			count++;
 		}
 		
 		//Se añaden las semillas al tablero
-		int count2=0;
+		count=0;
 		int position=(int)(Math.random()*(c*l)+1);
-		while(count2<s) {
+		while(count<s) {
 			if(position==1) {
 				if(!first.getSeed()) {
 					first.setSeed(true);
@@ -54,16 +56,37 @@ public class Board {
 			else {
 				addSeed(position-1,first.getNext());
 			}
-			count2++;
+			count++;
 			position=(int)(Math.random()*(c*l)+1);
 		}
 		
-		int count3=0;
-		while(count3<p) {
-			
-		}
-		
 		//Se añaden los portales al tablero 
+		/*count=0;
+		while(count<p) {
+			
+		}*/
+		
+		//Se añaden los jugadores al tablero
+		
+		int positionM=(int)(Math.random()*(columns*rows)+1);
+		int positionR=(int)(Math.random()*(columns*rows)+1);
+		Square temp=first;
+		int count2=1;
+		
+		while(count2<positionR+1) {
+			temp=temp.getNext();
+			count2++;
+		}
+		temp.setRick(true);
+		temp=first;
+		count2=1;
+		
+		while(count2<positionM+1) {
+			temp=temp.getNext();
+			count2++;
+		}
+		temp.setMorty(true);
+		
 	}
 	
 	//Metodo recursivo para ubicar la semilla en el tablero, se llama en la línea 46 y 50
@@ -84,6 +107,7 @@ public class Board {
 		}
 	}
 	
+	//Impresión del tablero
 	public void toStrings() {
 		Square temp=first;
 		for(int i=0;i<rows;i++) {
@@ -91,16 +115,16 @@ public class Board {
 			for(int j=0;j<columns;j++) {
 				
 				if(temp.getRick() && temp.getMorty()) {
-					System.out.print("["+temp.getRick()+temp.getMorty() + "] ");
+					System.out.print("["+"R"+"M" + "] ");
 				}
 				else if(temp.getRick()) {
-					System.out.print("["+temp.getRick()+"] ");
+					System.out.print("["+"R"+"] ");
 				}
 				else if(temp.getMorty()){
-					System.out.print("["+temp.getMorty()+"] ");
+					System.out.print("["+"M"+"] ");
 				}
 				else if(temp.getSeed()) {
-					System.out.print("["+temp.getSeed()+"] ");
+					System.out.print("["+"*"+"] ");
 				}
 				else {
 					System.out.print("["+temp.getId()+"] ");
@@ -111,6 +135,7 @@ public class Board {
 		System.out.println("");
 	}
 	
+	//Impresion de tableros con portales
 	public void showPortals() {
 		Square temp=first;
 		for(int i=0;i<rows;i++) {
@@ -128,50 +153,121 @@ public class Board {
 		}
 		System.out.println("");
 	}
-	
-	public void stepForward(int steps, Square player, String character) {
+	//Pasos hacía adelante
+	public void stepForward(int steps, int turn) {
 		
 		int count=0;
+		Square player= findPlayer(turn);
+		if(turn==0)
+			player.setRick(false);
+		else
+			player.setMorty(false);
+		
 		while(count<steps) {
 			player=player.getNext();
-			if(player.getSeed()) {
-				takeSeed(character);
-			}
-			if(player.getNext2()!=null) {
-				player=player.getNext2();
-				
-				if(player.getSeed()) {
-					takeSeed(character);
-				}
-			}
 			count++;
 		}
-	}
-	public void stepBackward(int steps, Square player, String character) {
 		
-		int count=0;
-		while(count<steps) {
-			player=player.getPrev();
-			if(player.getSeed()) {
-				takeSeed(character);
-			}
-			if(player.getNext2()!=null) {
-				player=player.getNext2();
-				
-				if(player.getSeed()) {
-					takeSeed(character);
-				}
-			}
-			count++;
+		if(player.getSeed()) {
+			takeSeed(turn);
+			player.setSeed(false);
 		}
+		if(player.getNext2()!=null) {
+			player=player.getNext2();
+			
+			if(player.getSeed()) {
+				takeSeed(turn);
+				player.setSeed(false);
+			}
+		}
+		
+		if(turn==0)
+			player.setRick(true);
+		else
+			player.setMorty(true);
 	}
 	
-	private void takeSeed(String character) {
-		if(character.equalsIgnoreCase("Rick")) {
+	//Pasos hacía atras
+		public void stepBackward(int steps, int turn) {
+			
+			int count=0;
+			Square player= findPlayer(turn);
+			if(turn==0)
+				player.setRick(false);
+			else
+				player.setMorty(false);
+			
+			while(count<steps) {
+				player=player.getPrev();
+				count++;
+			}
+			
+			if(player.getSeed()) {
+				takeSeed(turn);
+				player.setSeed(false);
+			}
+			if(player.getNext2()!=null) {
+				player=player.getNext2();
+				
+				if(player.getSeed()) {
+					takeSeed(turn);
+					player.setSeed(false);
+				}
+			}
+			
+			if(turn==0)
+				player.setRick(true);
+			else
+				player.setMorty(true);
+		}
+	
+	//Buscar jugador
+	private Square findPlayer(int turn) {
+		Square temp=first;
+		if(turn==0) {
+			while(!temp.getRick()) {
+				temp=temp.getNext();
+			}
+		}
+		else {
+			while(!temp.getMorty()) {
+				temp=temp.getNext();
+			}
+		}
+		
+		return temp;
+	}
+
+	//Tomar semillas
+	public void takeSeed(int turn) {
+		if(turn==0) {
 			rickSeeds++;
+			seeds--;
 		}
 		else {
 			mortySeeds++;
+			seeds--;
 		}
+	}
+	
+	//Cuando se tira el dado, se necesita información del Main
+	public boolean throwDice(int turn, int conti, int dice) {
+		
+		if(conti==1) {
+			stepForward(dice,turn);
+		}
+		else {
+			stepBackward(dice,turn);
+		}
+		
+		if(seeds==0)
+			return false;
+		else
+			return true;
+	}
+
+	public void showScoreBoard() {
+		
+		
 	}
 }

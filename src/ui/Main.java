@@ -23,7 +23,7 @@ public class Main {
 					continues=false;
 				}
 				if(e instanceof NumberFormatException) {
-					System.out.println("Se produjo un erro en entrada de datos, solo numeros");
+					System.out.println("Se produjo un error en entrada de datos, solo numeros");
 				}
 			}
 		}
@@ -45,7 +45,7 @@ public class Main {
 			l=Integer.parseInt(br.readLine());
 		}
 		
-		System.out.println("Escribe la cantidad de semillas, debe de ser menor a: "+(c*l)+"ingresa otro valor");
+		System.out.println("Escribe la cantidad de semillas, debe de ser menor o igual a: "+(c*l));
 		int s=Integer.parseInt(br.readLine());
 		
 		while(s>(c*l)) {
@@ -53,7 +53,7 @@ public class Main {
 			s=Integer.parseInt(br.readLine());
 		}
 		
-		System.out.println("Escribe la cantidad de portale, debe ser menor a: "+((c*l)*0.5)+"ingresa otro valor");
+		System.out.println("Escribe la cantidad de portales, debe ser menor a: "+((c*l)*0.5));
 		int p=Integer.parseInt(br.readLine());
 		
 		while(p>((c*l)*0.5)) {
@@ -61,8 +61,59 @@ public class Main {
 			p=Integer.parseInt(br.readLine());
 		}
 		
-		board= new Board(c,l,s,p);
+		System.out.println("Nombre para el jugador 1, el cual va a ser Rick");
+		String r=br.readLine();
 		
-		//while()
+		System.out.println("Nombre para el jugador 2, el cual va a ser Morty");
+		String m=br.readLine();
+		board= new Board(c,l,s,p,r,m);
+		
+		boolean playing=true;
+		int turn=(int)Math.floor(Math.random()*2);
+		
+		if(turn==0) 
+			System.out.println("Comienza jugando Rick");
+		else
+			System.out.println("Comienza jugando Morty");
+		
+		while(playing) {
+			System.out.println("Escoge una opción\n1:Tirar dado\n2:Ver tablero\n3:Ver enlaces\n4:Marcador");
+			int ans=Integer.parseInt(br.readLine());
+			
+			switch(ans) {
+			case 1:
+				int dice= ((int) (Math.random()*(6-1)) ) +1;
+				System.out.println("Sacaste" + dice);
+				System.out.println("Quieres:\n1:Avanzar\n2:Retroceder");
+				int conti=Integer.parseInt(br.readLine());
+				playing=board.throwDice(turn, conti, dice);
+				
+				if(turn==0)
+					turn=1;
+				else
+					turn=0;
+			break;
+			
+			case 2:
+				board.toStrings();
+			break;
+			
+			case 3:
+				board.showPortals();
+			break;
+			
+			case 4:
+				board.showScoreBoard();
+			break;
+			
+			default:
+				System.out.println("Esta opción no está disponible");
+			
+			}
+		}
+		
+		System.out.println("---------------GAME OVER---------------");
+		continues=false;
+		br.close();
 	}
 }
