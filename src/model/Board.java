@@ -77,6 +77,9 @@ public class Board {
 			temp=temp.getNext();
 			count2++;
 		}
+		while(temp.getSeed()) {
+			temp=temp.getNext();
+		}
 		temp.setRick(true);
 		temp=first;
 		count2=1;
@@ -84,6 +87,9 @@ public class Board {
 		while(count2<positionM+1) {
 			temp=temp.getNext();
 			count2++;
+		}
+		while(temp.getSeed()) {
+			temp=temp.getNext();
 		}
 		temp.setMorty(true);
 		

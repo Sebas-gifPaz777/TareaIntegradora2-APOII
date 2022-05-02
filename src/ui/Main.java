@@ -48,7 +48,7 @@ public class Main {
 		System.out.println("Escribe la cantidad de semillas, debe de ser menor o igual a: "+(c*l));
 		int s=Integer.parseInt(br.readLine());
 		
-		while(s>(c*l)) {
+		while(s>((c*l)-2) || s%2==0) {
 			System.out.println("La cantidad de semillas es muy grande, ingresa otro valor");
 			s=Integer.parseInt(br.readLine());
 		}
