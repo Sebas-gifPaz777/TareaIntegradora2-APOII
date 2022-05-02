@@ -45,11 +45,11 @@ public class Main {
 			l=Integer.parseInt(br.readLine());
 		}
 		
-		System.out.println("Escribe la cantidad de semillas, debe de ser menor o igual a: "+(c*l));
+		System.out.println("Escribe la cantidad de semillas, debe de ser menor o igual a: "+((c*l)-2)+", y debe ser impar");
 		int s=Integer.parseInt(br.readLine());
 		
 		while(s>((c*l)-2) || s%2==0) {
-			System.out.println("La cantidad de semillas es muy grande, ingresa otro valor");
+			System.out.println("La cantidad de semillas es muy grande o es par, ingresa otro valor");
 			s=Integer.parseInt(br.readLine());
 		}
 		
