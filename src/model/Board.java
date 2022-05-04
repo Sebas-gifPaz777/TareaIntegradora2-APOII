@@ -16,7 +16,7 @@ public class Board {
 	private int columns;
 	private int rows;
 	
-	private ArrayList<Person> winners;
+	//private ArrayList<Person> winners;
 
 	public Board(int c, int l, int s, int p, String r, String m) {
 		columns = c;
@@ -70,37 +70,40 @@ public class Board {
 		count = 0;
 		char portalId = 'A';
 		while (count < p) {
-			int countPos1 = 0;
-			int countPos2 = 0;
+			int countPos1 = 1;
+			int countPos2 = 1;
 			int position1 = 0;
 			int position2 = 0;
 			do {
 				position1 = ((int) (Math.random() * ((c * l) - 1))) + 1;
 				position2 = ((int) (Math.random() * ((c * l) - 1))) + 1;
-			} while (position1 == position2 || position1 == position2 + 1 || position1 == position2 - 1
-					|| position2 == position1 + 1 || position2 == position1 - 1);
+			} while (position1 == position2 || position1 == position2 + 1 || position1 == position2 - 1);
 
 			Square temp = first;
-
+			Square temp2 = first;
+			
 			while (countPos1 < position1) {
 				temp = temp.getNext();
 				countPos1++;
 			}
-			while (temp.getNext2() != null || temp.getNext() == getSquare(position2)) {
-				temp = temp.getNext();
-			}
-			temp.setNext2(getSquare(position2));
-			temp.setIdPortal(portalId);
-
-			Square temp2 = first;
+			
 			while (countPos2 < position2) {
 				temp2 = temp2.getNext();
 				countPos2++;
 			}
-			while (temp2.getNext2() != null || temp.getNext() == getSquare(position1)) {
+			while (temp.getNext2() != null || temp.getNext() == temp2 || temp == temp2 || temp.getPrev() == temp2) {
+				temp = temp.getNext();
+			}
+			
+			while (temp2.getNext2() != null || temp2.getNext() == temp || temp2 == temp || temp2.getPrev() == temp) {
 				temp2 = temp2.getNext();
 			}
-			temp2.setNext2(getSquare(position1));
+			
+			temp.setNext2(temp2);
+			temp.setIdPortal(portalId);
+
+			
+			temp2.setNext2(temp);
 			temp2.setIdPortal(portalId);
 
 			portalId++;
@@ -274,18 +277,7 @@ public class Board {
 
 		return temp;
 	}
-
-	public Square getSquare(int position) {
-		Square temp = first;
-		if (position == 1) {
-			return temp;
-		}
-		while (position < temp.getId()) {
-			temp = first.getNext();
-		}
-		return temp;
-	}
-
+	
 	// Tomar semillas
 	public void takeSeed(int turn) {
 		if (turn == 0) {
@@ -324,11 +316,11 @@ public class Board {
 		if(rickSeeds > mortySeeds) {
 			text = " Rick ha ganado recolectando: " + rickSeeds + " semillas";
 			int score = rickSeeds * 120 -rickTime;
-			winners.add(new Person(rickName, score));
+			//winners.add(new Person(rickName, score));
 		}else {
 			text = " Morty ha ganado recolectando: " + mortySeeds + " semillas";
 			int score = mortySeeds * 120 - mortyTime;
-			winners.add(new Person(mortyName, score));
+			//winners.add(new Person(mortyName, score));
 		}
 		
 		return text;

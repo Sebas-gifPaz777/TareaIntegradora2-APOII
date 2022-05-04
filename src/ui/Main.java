@@ -85,7 +85,7 @@ public class Main {
 			switch(ans) {
 			case 1:
 				int dice= ((int) (Math.random()*(6-1)) ) +1;
-				System.out.println("Sacaste" + dice);
+				System.out.println("Sacaste: " + dice);
 				System.out.println("Quieres:\n1:Avanzar\n2:Retroceder");
 				
 				Instant instantStarted = Instant.now();
@@ -96,17 +96,18 @@ public class Main {
 				
 				Duration duration = Duration.between(instantStarted, instantStopped);
 				int time = (int)(duration.toMillis()/1000);
+				
 				playing=board.throwDice(turn, conti, dice);
 				System.out.println(time);
 				
 				if(turn==0) {
 					turn=1;
 					board.addRickTime(time);
-					System.out.println(board.getRickTime());
+					//System.out.println(board.getRickTime());
 				}else
 					turn=0;
 					board.addMortyTime(time);
-					System.out.println(board.getMortyTime());
+					//System.out.println(board.getMortyTime());
 			break;
 			
 			case 2:
