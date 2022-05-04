@@ -2,7 +2,7 @@ package model;
 
 public class Square {
 	
-	private char idPortal='Z';
+	private char idPortal=' ';
 	private int id;
 	private boolean morty;
 	private boolean rick;

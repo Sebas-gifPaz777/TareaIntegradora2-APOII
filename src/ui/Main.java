@@ -3,6 +3,8 @@ package ui;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.Duration;
+import java.time.Instant;
 
 import model.Board;
 
@@ -85,13 +87,23 @@ public class Main {
 				int dice= ((int) (Math.random()*(6-1)) ) +1;
 				System.out.println("Sacaste" + dice);
 				System.out.println("Quieres:\n1:Avanzar\n2:Retroceder");
+				
+				Instant instantStarted = Instant.now();
+				
 				int conti=Integer.parseInt(br.readLine());
+				
+				Instant instantStopped = Instant.now();
+				
+				Duration duration = Duration.between(instantStarted, instantStopped);
+				int time = (int)(duration.toMinutes()*60);
 				playing=board.throwDice(turn, conti, dice);
 				
-				if(turn==0)
+				if(turn==0) {
 					turn=1;
-				else
+					board.addRickTime(time);
+				}else
 					turn=0;
+					board.addMortyTime(time);
 			break;
 			
 			case 2:
@@ -103,7 +115,7 @@ public class Main {
 			break;
 			
 			case 4:
-				board.showScoreBoard();
+				System.out.println(board.scoreBoard()); 
 			break;
 			
 			default:
@@ -112,7 +124,9 @@ public class Main {
 			}
 		}
 		
-		System.out.println("---------------GAME OVER---------------");
+		System.out.println("---------------GAME OVER---------------\n");
+		
+		System.out.println(board.winner());
 		continues=false;
 		br.close();
 	}
