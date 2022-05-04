@@ -95,15 +95,18 @@ public class Main {
 				Instant instantStopped = Instant.now();
 				
 				Duration duration = Duration.between(instantStarted, instantStopped);
-				int time = (int)(duration.toMinutes()*60);
+				int time = (int)(duration.toMillis()/1000);
 				playing=board.throwDice(turn, conti, dice);
+				System.out.println(time);
 				
 				if(turn==0) {
 					turn=1;
 					board.addRickTime(time);
+					System.out.println(board.getRickTime());
 				}else
 					turn=0;
 					board.addMortyTime(time);
+					System.out.println(board.getMortyTime());
 			break;
 			
 			case 2:
