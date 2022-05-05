@@ -223,17 +223,17 @@ public class Board {
 	// Pasos hacía adelante
 	public void stepForward(int steps, int turn) {
 
-		int count = 0;
 		Square player = findPlayer(turn);
 		if (turn == 0)
 			player.setRick(false);
 		else
 			player.setMorty(false);
 
-		while (count < steps) {
-			player = player.getNext();
-			count++;
+		if(steps==1) {
+			player=player.getNext();
 		}
+		else
+			player=player.advance(player.getNext(),steps-1);
 
 		if (player.getSeed()) {
 			takeSeed(turn);
@@ -257,17 +257,17 @@ public class Board {
 	// Pasos hacía atras
 	public void stepBackward(int steps, int turn) {
 
-		int count = 0;
 		Square player = findPlayer(turn);
 		if (turn == 0)
 			player.setRick(false);
 		else
 			player.setMorty(false);
 
-		while (count < steps) {
-			player = player.getPrev();
-			count++;
+		if(steps==1) {
+			player=player.getPrev();
 		}
+		else
+			player= player.back(player.getPrev(),steps-1);
 
 		if (player.getSeed()) {
 			takeSeed(turn);

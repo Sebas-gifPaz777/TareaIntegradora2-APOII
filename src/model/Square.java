@@ -82,5 +82,21 @@ public class Square {
 	public void setIdPortal(char newIdP) {
 		idPortal=newIdP;
 	}
+	
+	public Square advance(Square player, int i) {
+		if(i==0) {
+			return player;
+		}
+		else
+			return advance(player.getNext(),i-1);
+	}
+	
+	public Square back(Square player, int i) {
+		if(i==0) {
+			return player;
+		}
+		else
+			return back(player.getPrev(),i-1);
+	}
 
 }
