@@ -1,8 +1,7 @@
 package model;
 
-import java.io.Serializable;
 
-public class Square implements Serializable {
+public class Square {
 	
 	private char idPortal=' ';
 	private int id;

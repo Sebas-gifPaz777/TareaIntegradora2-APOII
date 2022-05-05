@@ -1,8 +1,7 @@
 package model;
 
-import java.io.Serializable;
 
-public class Person implements Serializable, Comparable<Person>{
+public class Person implements Comparable<Person>{
 	
 	private String nickname;
 	private String score;
