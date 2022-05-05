@@ -1,8 +1,16 @@
 package model;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
-public class Board {
+public class Board implements Serializable {
 
 	private Square first;
 	private Square last;
@@ -16,7 +24,9 @@ public class Board {
 	private int columns;
 	private int rows;
 	
-	//private ArrayList<Person> winners;
+	private ArrayList<Person> winners;
+	
+
 
 	public Board(int c, int l, int s, int p, String r, String m) {
 		columns = c;
@@ -30,7 +40,24 @@ public class Board {
 		
 		rickTime = 0;
 		mortyTime = 0;
+		
+		winners = new ArrayList<>();
 
+		try {
+			BufferedReader explorer = new BufferedReader(new FileReader("files/winners.txt"));
+			String currentLine;
+
+			while ((currentLine = explorer.readLine()) != null) {
+				String[] atributes = currentLine.split(":");
+				winners.add(new Person(atributes[0],atributes[1]));
+			}
+			explorer.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
 		// Se crea el tablero con los numeros de cada casilla
 		first = new Square(1);
 		last = first;
@@ -313,16 +340,49 @@ public class Board {
 	}
 	public String winner() {
 		String text = "";
-		if(rickSeeds > mortySeeds) {
-			text = " Rick ha ganado recolectando: " + rickSeeds + " semillas";
-			int score = rickSeeds * 120 -rickTime;
-			//winners.add(new Person(rickName, score));
-		}else {
-			text = " Morty ha ganado recolectando: " + mortySeeds + " semillas";
-			int score = mortySeeds * 120 - mortyTime;
-			//winners.add(new Person(mortyName, score));
+		int position = 0;
+		boolean found = false;
+		for (int i = 0; i<winners.size() && !found; i++) {
+			if(winners.get(i).getNickname().equalsIgnoreCase(mortyName) || winners.get(i).getNickname().equalsIgnoreCase(rickName)) {
+				found=true;
+				position = i;
+			}
 		}
 		
+		
+		if(rickSeeds > mortySeeds) {
+			text = " Rick ha ganado recolectando: " + rickSeeds + " semillas";
+			
+			if(found) {
+				int prevScore = Integer.valueOf(winners.get(position).getScore());
+				String score = String.valueOf(rickSeeds * 120 - rickTime + prevScore);
+				winners.get(position).setScore(score);
+			}else {
+				String score = String.valueOf(rickSeeds * 120 - rickTime);
+				winners.add(new Person(this.rickName, score));
+			}
+		}else {
+			text = " Morty ha ganado recolectando: " + mortySeeds + " semillas";
+			
+			if(found) {
+				int prevScore = Integer.valueOf(winners.get(position).getScore());
+				String score =  String.valueOf(mortySeeds * 120 - mortyTime + prevScore) ;
+				winners.get(position).setScore(score);
+			}else {
+				String score =  String.valueOf(mortySeeds * 120 - mortyTime) ;
+				winners.add(new Person(this.mortyName, score));
+			}
+			
+		}
+		
+		Collections.sort(winners);
+		
+		text += "\n------ TOP 5 -------\n"; 
+		for (int i = 0; i<winners.size() && i<5; i++) {
+				text+= (i+1) +"." + winners.get(i).getNickname() + " => " + winners.get(i).getScore() + "\n";
+		}
+		
+		writeFile();
 		return text;
 	}
 	
@@ -337,5 +397,30 @@ public class Board {
 	}
 	public void addMortyTime(int newTime) {
 		this.mortyTime += newTime;
+	}
+	
+	public void writeFile(){
+		File file = new File("files/winners.txt");
+		
+		FileWriter fw;
+		try {
+			fw = new FileWriter(file);
+
+			BufferedWriter output = new BufferedWriter(fw);
+			
+			
+			for (int i = 0; i < winners.size(); i++) {
+				output.write(winners.get(i).getNickname() + ":" + winners.get(i).getScore() + "\n");
+			}
+
+			output.close();
+			fw.close();
+			
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+		
+		
 	}
 }

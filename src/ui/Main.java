@@ -74,9 +74,9 @@ public class Main {
 		int turn=(int)Math.floor(Math.random()*2);
 		
 		if(turn==0) 
-			System.out.println("Comienza jugando Rick");
+			System.out.println("\n------ Comienza jugando Rick ------\n");
 		else
-			System.out.println("Comienza jugando Morty");
+			System.out.println("\n------ Comienza jugando Morty------\n");
 		
 		while(playing) {
 			System.out.println("Escoge una opción\n1:Tirar dado\n2:Ver tablero\n3:Ver enlaces\n4:Marcador");
@@ -98,16 +98,18 @@ public class Main {
 				int time = (int)(duration.toMillis()/1000);
 				
 				playing=board.throwDice(turn, conti, dice);
-				System.out.println(time);
+				System.out.println("El turno duró: " + time + " segundos");
 				
 				if(turn==0) {
 					turn=1;
 					board.addRickTime(time);
-					//System.out.println(board.getRickTime());
-				}else
+					System.out.println("Tiempo de Rick " + board.getRickTime() + " segundos\n");
+				}else {
 					turn=0;
 					board.addMortyTime(time);
-					//System.out.println(board.getMortyTime());
+					System.out.println("Tiempo de Morty "+ board.getMortyTime() + " segundos\n");
+				}
+					
 			break;
 			
 			case 2:
